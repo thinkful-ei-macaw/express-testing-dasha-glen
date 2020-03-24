@@ -10,30 +10,40 @@ const google = require('./google-data.js');
 
 app.get('/apps', (req, res) => {
   const {sort, genres} = req.query;
-  if(!sort) {
-      return res
-                .status(400)
-                .send('You need to select sort!');
-  }
-  if(sort !== 'rating' && sort !== 'app') {
-      return res
-                .status(400)
-                .send('You must select rating or app');
-  }
+  let googleArray = [...google];
 
-  let sortedArray = [...google];
+  if(!sort) {
+    res
+        .status(400)
+        .send('You need to select sort!');
+    }
+
+    if(sort !== 'App' && sort !== 'Rating') {
+        res
+        .status(400)
+        .send('You must select rating or app');
+    }
+
+    if(sort) {
+        if(sort === 'Rating') {
+            googleArray.sort((a, b) => {
+                return a['Rating'] > b['Rating'] ? 1 : a['Rating'] < b['Rating'] ? -1 : 0;
+            })
+        }
+        if(sort === 'App') {
+            googleArray.sort((a,b) => {
+                return a['App'] > b['App'] ? 1 : a['App'] < b['App'] ? -1 : 0;
+            })
+        }
+    } 
+    
+
+    
+
   
-  if('rating') {
-      sortedArray.sort((a, b) => {
-          return a['rating'] > b['rating'] ? 1 : a['rating'] < b['rating'] ? -1 : 0;
-      })
-  }
-  if('app') {
-      sortedArray.sort((a,b) => {
-          return a['app'] > b['app'] ? 1 : a['app'] < b['app'] ? -1 : 0;
-      })
-  }
-    res.json(sortedArray);
+  
+  
+    res.json(googleArray);
 });
   
 app.listen(8000, () => {
