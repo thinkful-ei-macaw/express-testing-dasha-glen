@@ -25,7 +25,23 @@ describe('Sort Test', () => {
             return supertest(app)
                 .get('/apps')
                 .expect(400, 'You need to select sort!')
+        });
+        it('Should return a status of 400 if no App or Rating is included', () => {
+            return supertest(app)
+                .get('/apps')
+                .query({ sort: ' ' })
+                .expect(400, 'You must select rating or app')
         })
+        it('Should return a status of 400 if genre does not match', () => {
+            const query = {
+                genres: 'Invalid'
+            }
+            return supertest(app)
+                .get('./apps')
+                .query(query)
+                .expect(400, 'Genre not included, please pick another')
+        })
+
     })
 
 });
